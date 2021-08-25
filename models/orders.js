@@ -29,6 +29,21 @@ class Order {
     assignPickups() {
         // to do
     }
+
+    updateOrderStage(newStage) {
+        return db.collection('orders').updateOne({_id: this._id}, {$set: {order_stage: newStage}});
+    }
+
+    static findById(orderId) {
+        const db = getDb();
+
+        return db.collection('orders').findOne({_id: new ObjectId(orderId)})
+        .then(order => {
+            return order;
+        }).catch(err => {
+            console.log(err);
+        })
+    }
 }
 
 module.exports = Order;

@@ -13,11 +13,12 @@ app.use('/auth', authRoutes);
 app.use('/cust', customerRoutes);
 
 app.use((error, req, res, next) => {
+    console.log('showing error');
     console.log(error);
     const status = error.statusCode || 500;
     const message = error.message;
     const data = error.data;
-    res.status(status).json({ message: message, data: data });
+    res.status(status).json({ message: message, status: status });
 });
 
 mongoConnect(() => {
