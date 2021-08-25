@@ -3,6 +3,8 @@ const mongoConnect = require('./util/database').mongoConnect;
 
 const authRoutes = require('./routes/auth');
 const customerRoutes = require('./routes/customer');
+const adminRoutes = require('./routes/admin');
+const driverRoutes = require('./routes/driver');
 
 const app = express();
 
@@ -11,6 +13,8 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/cust', customerRoutes);
+app.use('/admin', adminRoutes);
+app.use('/driver', driverRoutes);
 
 app.use((error, req, res, next) => {
     console.log('showing error');

@@ -3,8 +3,8 @@ const { getDb } = require("../util/database");
 
 class Customer {
     
-    constructor(name, mobile, password, cart) {
-        // this._id = id;
+    constructor(name, mobile, password, cart, id) {
+        this._id = id;
         this.name = name;
         this.mobile = mobile;
         this.password = password;
@@ -50,13 +50,14 @@ class Customer {
         })
     }
 
-    addToCart(product) {
+    addToCart(productId) {
         // const cartProduct = this.cart.items.findIndex(cp => {
         //     return cp._id.toString() === product._id.toString()
         // })
 
-        const updatedCart = [{ ...product, quantity: 1}];
+        const updatedCart = this.cart.concat([{itemId: productId, quantity: 1}]);
         const db = getDb();
+        console.log(updatedCart);
         db.collection('customers').updateOne({_id: new ObjectId(this._id)}, {$set: {cart: updatedCart}});
     }
 

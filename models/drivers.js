@@ -4,10 +4,11 @@ const Order = require("./orders");
 
 class Driver {
     
-    constructor(name, mobile, password) {
+    constructor(name, mobile, password, id) {
         this.name = name;
         this.mobile = mobile;
         this.password = password;
+        this._id = id;
     }
 
     save() {
@@ -32,7 +33,15 @@ class Driver {
     }
 
     static findById(driverId) {
-        
+        const db = getDb();
+
+        return db.collection('drivers').findOne({_id: new ObjectId(driverId)})
+        .then(driver => {
+            return driver;
+        }).catch(err => {
+            console.log("Error: " + err);
+            throw err;
+        })
     }
 
     static findByMobile(driverMobile) {

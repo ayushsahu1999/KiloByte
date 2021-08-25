@@ -1,11 +1,13 @@
 const { ObjectId } = require("mongodb");
 const { getDb } = require("../util/database");
 const Customer = require("./customers");
+const Item = require("./items");
 
 class Order {
     constructor(customerId) {
         this.customerId = customerId;
         this.cart = [];
+        this.deliveryId = null;
         this.order_stage = "Task Created";
         this.pickups = [];
     }
@@ -22,8 +24,22 @@ class Order {
 
     addCart() {
         return Customer.findById(this.customerId).then(result => {
-            this.cart = result.getCart();
-        }).catch(err => console.log(err))
+            this.cart = new Customer(result.name, result.mobile, result.password, result.cart, result.id).getCart();
+
+            this.pickups = this.cart.map(async cItem => {
+                const item = await Item.findById(cItem.itemId);
+                var location = item.addresses[Math.floor(Math.random() * item.addresses.length)];
+                return location;
+                // .then(item => {
+                //     var location = item.addresses[Math.floor(Math.random() * item.addresses.length)];
+                //     return location;
+                // })
+            })
+            console.log(this.pickups);
+        }).catch(err => {
+            err.statusCode = 900;
+            throw err;
+        })
     }
 
     assignPickups() {

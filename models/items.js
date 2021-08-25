@@ -3,7 +3,6 @@ const { getDb } = require("../util/database");
 
 class Item {
     constructor(name, category, addresses) {
-        // this._id = id;
         this.name = name;
         this.category = category;
         this.addresses = addresses;
@@ -18,6 +17,17 @@ class Item {
         .catch(err => console.log(err));
     }
 
+    static findById(itemId) {
+        const db = getDb();
+
+        // console.log(customerMobile);
+        return db.collection('items').findOne({_id: new ObjectId(itemId)})
+        .then(item => {
+            return item;
+        }).catch(err => {
+            console.log("Error: " + err);
+        })
+    }
 
 }
 
