@@ -32,6 +32,7 @@ class Order {
         return Customer.findById(this.customerId).then(async result => {
             this.cart = new Customer(result.name, result.mobile, result.password, result.cart, result.id).getCart();
             this.pickups = await this.assignPickups(this.pickups, this.cart);
+            db.collection('customers').updateOne({_id: new ObjectId(this.customerId)}, {$set: {cart: []}});
 
             // this.assignPickups(this.pickups, this.cart).then(pickup => {
             //     // console.log(this);

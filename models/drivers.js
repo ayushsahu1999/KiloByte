@@ -43,6 +43,11 @@ class Driver {
         
     }
 
+    static getOrders(driverId) {
+        const db = getDb();
+        return db.collection('orders').find({deliveryId: driverId.toString()});
+    }
+
     static findById(driverId) {
         const db = getDb();
 
