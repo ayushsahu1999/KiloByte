@@ -14,7 +14,7 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/cust', customerRoutes);
 app.use('/admin', adminRoutes);
-app.use('/driver', driverRoutes);
+app.use('/drive', driverRoutes);
 
 app.use((error, req, res, next) => {
     console.log('showing error');

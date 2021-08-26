@@ -23,27 +23,37 @@ class Order {
     }
 
     addCart() {
-        return Customer.findById(this.customerId).then(result => {
-            this.cart = new Customer(result.name, result.mobile, result.password, result.cart, result.id).getCart();
+        const db = getDb();
 
-            this.pickups = this.cart.map(async cItem => {
-                const item = await Item.findById(cItem.itemId);
-                var location = item.addresses[Math.floor(Math.random() * item.addresses.length)];
-                return location;
-                // .then(item => {
-                //     var location = item.addresses[Math.floor(Math.random() * item.addresses.length)];
-                //     return location;
-                // })
-            })
-            console.log(this.pickups);
+        return Customer.findById(this.customerId).then(async result => {
+            this.cart = new Customer(result.name, result.mobile, result.password, result.cart, result.id).getCart();
+            this.order_stage = 'demo';
+            this.pickups = await this.assignPickups(this.pickups, this.cart);
+
+            // this.assignPickups(this.pickups, this.cart).then(pickup => {
+            //     // console.log(this);
+                
+            //     this.pickups = pickup;
+            //     // return pickup;
+            //     // console.log(this.cart, this.pickups);
+            //     // db.collection('customers').updateOne({_id: new ObjectId(this.customerId)}, {$set: {cart: []}});
+            // })
+            
         }).catch(err => {
             err.statusCode = 900;
             throw err;
         })
     }
 
-    assignPickups() {
-        // to do
+    async assignPickups(pickups, cart) {
+        
+        pickups = await Promise.all(cart.map(async cItem => {
+            const item = await Item.findById(cItem.itemId);
+            var location = item.addresses[Math.floor(Math.random() * item.addresses.length)];
+            return location;
+        }));
+        // console.log(pickups);
+        return pickups;
     }
 
     updateOrderStage(newStage) {

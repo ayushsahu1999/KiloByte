@@ -3,6 +3,6 @@ const router = express.Router();
 
 const driverController = require('../controllers/driver');
 
-router.post('update-status', driverController.statusUpdate);
+router.post('/update-status', driverController.statusUpdate);
 
 module.exports = router;

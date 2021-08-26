@@ -50,12 +50,12 @@ class Customer {
         })
     }
 
-    addToCart(productId) {
+    addToCart(productId, quantity) {
         // const cartProduct = this.cart.items.findIndex(cp => {
         //     return cp._id.toString() === product._id.toString()
         // })
 
-        const updatedCart = this.cart.concat([{itemId: productId, quantity: 1}]);
+        const updatedCart = this.cart.concat([{itemId: productId, quantity: quantity}]);
         const db = getDb();
         console.log(updatedCart);
         db.collection('customers').updateOne({_id: new ObjectId(this._id)}, {$set: {cart: updatedCart}});

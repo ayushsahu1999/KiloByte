@@ -22,14 +22,23 @@ class Driver {
         .catch(err => console.log(err));
     }
 
-    async statusUpdate(orderId, updatedStatus) {
-        const order = await Order.findById(orderId);
-        if (!order) {
-            const err = new Error('Cannot find Order');
-            err.statusCode = 402;
+    statusUpdate(orderId, updatedStatus) {
+        return Order.findById(orderId)
+        .then(order => {
+            if (!order) {
+                const err = new Error('Cannot find Order');
+                err.statusCode = 401;
+                throw err;
+            }
+
+            order.updateOrderStage(updatedStatus);
+
+        })
+        .catch(err => {
             throw err;
-        }
-        await order.updateOrderStage(updatedStatus);
+        })
+        
+        
     }
 
     static findById(driverId) {
