@@ -5,11 +5,14 @@ const authRoutes = require('./routes/auth');
 const customerRoutes = require('./routes/customer');
 const adminRoutes = require('./routes/admin');
 const driverRoutes = require('./routes/driver');
+const auth = require('./middleware/auth');
 
 const app = express();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+
+app.use(auth);
 
 app.use('/auth', authRoutes);
 app.use('/cust', customerRoutes);

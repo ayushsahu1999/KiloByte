@@ -8,7 +8,7 @@ class Customer {
         this.name = name;
         this.mobile = mobile;
         this.password = password;
-        this.cart = cart;
+        this.cart = cart || [];
     }
 
     save() {
@@ -19,7 +19,10 @@ class Customer {
         .then(result => {
             console.log(result);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            err.statusCode = 900;
+            throw err;
+        });
     }
 
     static findById(customerId) {
@@ -32,7 +35,8 @@ class Customer {
             // console.log("customer: " + customer);
             return customer;
         }).catch(err => {
-            console.log("Error: " + err);
+            err.statusCode = 900;
+            throw err;
         })
     }
 
@@ -46,7 +50,8 @@ class Customer {
             // console.log("customer: " + customer);
             return customer;
         }).catch(err => {
-            console.log("Error: " + err);
+            err.statusCode = 900;
+            throw err;
         })
     }
 

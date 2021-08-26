@@ -45,10 +45,10 @@ exports.login = (req, res, next) => {
             }
 
             const token = jwt.sign({
-                userId: customer._id.toString(),
-                name: customer.name
+                userType: 'customer',
+                mobile: customer.mobile
             }, 'somesupersecretsecret', {
-                expiresIn: '24h'
+                expiresIn: '10d'
             });
         
             res.status(200).json({token: token});
@@ -102,10 +102,10 @@ exports.driverLogin = (req, res, next) => {
             }
 
             const token = jwt.sign({
-                userId: driver._id.toString(),
-                name: driver.name
+                userType: 'driver',
+                mobile: driver.mobile
             }, 'somesupersecretsecret', {
-                expiresIn: '24h'
+                expiresIn: '10d'
             });
         
             res.status(200).json({token: token});
@@ -159,10 +159,10 @@ exports.adminLogin = (req, res, next) => {
             }
 
             const token = jwt.sign({
-                userId: admin._id.toString(),
-                name: admin.name
+                userType: 'admin',
+                mobile: admin.mobile
             }, 'somesupersecretsecret', {
-                expiresIn: '24h'
+                expiresIn: '10d'
             });
         
             res.status(200).json({token: token});

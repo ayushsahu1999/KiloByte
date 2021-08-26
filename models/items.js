@@ -14,7 +14,10 @@ class Item {
         .then(result => {
             console.log(result);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            err.statusCode = 900;
+            throw err;
+        });
     }
 
     static findById(itemId) {
@@ -25,7 +28,8 @@ class Item {
         .then(item => {
             return item;
         }).catch(err => {
-            console.log("Error: " + err);
+            err.statusCode = 900;
+            throw err;
         })
     }
 

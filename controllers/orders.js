@@ -2,14 +2,20 @@ const Customer = require('../models/customers');
 const Order = require('../models/orders');
 
 exports.addToCart = (req, res, next) => {
-    const custMob = req.body.mobile;
+    if (!req.isAuth || req.userType !== 'customer') {
+        const err = new Error('No Access');
+        err.statusCode = 404;
+        throw err;
+    }
+
+    const custMob = req.mobile;
     const itemId = req.body.itemId;
     const quantity = req.body.quantity;
     Customer.findByMobile(custMob)
     .then(customer => {
         new Customer(customer.name, customer.mobile, customer.password, customer.cart, customer._id).addToCart(itemId, quantity || 1);
 
-        res.status(200).json({status: 'created'});
+        res.status(200).json({status: 'Added Succesfully'});
     })
     .catch(err => {
         next(err);
@@ -17,7 +23,14 @@ exports.addToCart = (req, res, next) => {
 }
 
 exports.confirm = (req, res, next) => {
-    const mobile = req.body.mobile;
+
+    if (!req.isAuth || req.userType !== 'customer') {
+        const err = new Error('No Access');
+        err.statusCode = 404;
+        throw err;
+    }
+
+    const mobile = req.mobile;
 
     Customer.findByMobile(mobile)
     .then(checkCust => {
@@ -31,7 +44,7 @@ exports.confirm = (req, res, next) => {
         order.addCart().then(r => {
             // console.log(order);
             order.save().then(result => {
-                res.status(200).json({status: 'created'})
+                res.status(200).json({status: 'Order Placed Successfully'})
             });
         })
         

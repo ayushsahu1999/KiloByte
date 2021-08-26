@@ -58,14 +58,29 @@ class Admin {
     static getAllOrders(orderStage) {
         const db = getDb();
 
-        return db.collection('orders').find({order_stage: orderStage}).toArray()
-        .then(orders => {
-            return orders;
-        })
-        .catch(err => {
-            err.statusCode = 900;
-            throw err;
-        })
+        console.log(orderStage);
+
+        if (orderStage && orderStage !== "") {
+            console.log('assassas');
+            return db.collection('orders').find({order_stage: orderStage}).toArray()
+            .then(orders => {
+                return orders;
+            })
+            .catch(err => {
+                err.statusCode = 900;
+                throw err;
+            })
+        } else {
+            return db.collection('orders').find().toArray()
+            .then(orders => {
+                return orders;
+            })
+            .catch(err => {
+                err.statusCode = 900;
+                throw err;
+            })
+        }
+        
     }
 
     static findByMobile(adminMobile) {

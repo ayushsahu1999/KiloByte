@@ -4,12 +4,13 @@ const Customer = require("./customers");
 const Item = require("./items");
 
 class Order {
-    constructor(customerId) {
+    constructor(customerId, id) {
         this.customerId = customerId;
         this.cart = [];
         this.deliveryId = null;
         this.order_stage = "Task Created";
         this.pickups = [];
+        this._id = id;
     }
 
     save() {
@@ -19,7 +20,10 @@ class Order {
         .then(result => {
             console.log(result);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            err.statusCode = 900;
+            throw err;
+        });
     }
 
     addCart() {
@@ -27,7 +31,6 @@ class Order {
 
         return Customer.findById(this.customerId).then(async result => {
             this.cart = new Customer(result.name, result.mobile, result.password, result.cart, result.id).getCart();
-            this.order_stage = 'demo';
             this.pickups = await this.assignPickups(this.pickups, this.cart);
 
             // this.assignPickups(this.pickups, this.cart).then(pickup => {
@@ -57,6 +60,7 @@ class Order {
     }
 
     updateOrderStage(newStage) {
+        const db = getDb();
         return db.collection('orders').updateOne({_id: this._id}, {$set: {order_stage: newStage}});
     }
 
@@ -67,7 +71,8 @@ class Order {
         .then(order => {
             return order;
         }).catch(err => {
-            console.log(err);
+            err.statusCode = 900;
+            throw err;
         })
     }
 }

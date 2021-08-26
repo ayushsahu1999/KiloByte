@@ -2,7 +2,13 @@ const Admin = require('../models/admin');
 const Order = require('../models/orders');
 
 exports.addItem = (req, res, next) => {
-    Admin.findByMobile(req.body.mobile)
+    if (!req.isAuth || req.userType !== 'admin') {
+        const err = new Error('No Access');
+        err.statusCode = 404;
+        throw err;
+    }
+
+    Admin.findByMobile(req.mobile)
     .then(admin => {
         if (!admin) {
             const err = new Error('Invalid credentials');
@@ -17,7 +23,7 @@ exports.addItem = (req, res, next) => {
         }
         new Admin(admin.name, admin.mobile).createItems(item);
         
-        res.status(200).json({status: 'Item created!'});
+        res.status(200).json({...item, status: 'Created'});
     })
     .catch(err => {
         next(err);
@@ -25,6 +31,13 @@ exports.addItem = (req, res, next) => {
 }
 
 exports.orders = (req, res, next) => {
+
+    if (!req.isAuth || req.userType !== 'admin') {
+        const err = new Error('No Access');
+        err.statusCode = 404;
+        throw err;
+    }
+
     const status = req.body.order_status;
     
     Admin.getAllOrders(status).then(result => {
@@ -36,6 +49,11 @@ exports.orders = (req, res, next) => {
 }
 
 exports.drivers = (req, res, next) => {
+    if (!req.isAuth || req.userType !== 'admin') {
+        const err = new Error('No Access');
+        err.statusCode = 404;
+        throw err;
+    }
     Admin.getAllDrivers().then(result => {
         res.status(200).json({result: result});
     })
@@ -45,6 +63,11 @@ exports.drivers = (req, res, next) => {
 }
 
 exports.assignDriver = (req, res, next) => {
+    if (!req.isAuth || req.userType !== 'admin') {
+        const err = new Error('No Access');
+        err.statusCode = 404;
+        throw err;
+    }
 
     if (!req.body.orderId || !req.body.driverId) {
         const err = new Error('Invalid order id');
@@ -53,7 +76,7 @@ exports.assignDriver = (req, res, next) => {
     }
 
     Admin.assignDrivers(req.body.orderId, req.body.driverId).then(result => {
-        res.status(200).json({result: 'updated'});
+        res.status(200).json({result: 'Driver Assigned!'});
     })
     .catch(err => {
         next(err);

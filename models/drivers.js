@@ -31,7 +31,9 @@ class Driver {
                 throw err;
             }
 
-            order.updateOrderStage(updatedStatus);
+            new Order(order.customerId, order._id).updateOrderStage(updatedStatus).then(r => {
+                console.log('Done!');
+            });
 
         })
         .catch(err => {
